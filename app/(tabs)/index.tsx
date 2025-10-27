@@ -1,7 +1,7 @@
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useRef, useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function App() {
   const cameraRef = useRef(null);
   const [facing, setFacing] = useState<CameraType>("back");
@@ -25,6 +25,7 @@ export default function App() {
   }
 
   const captureImage = async () => {
+    console.log("Pumasok")
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({ quality: 0.7 });
 
@@ -44,12 +45,13 @@ export default function App() {
         type: "image/jpeg",
       });
 
-      const res = await fetch("http://192.168.68.161:8000/predict", {
+      const res = await fetch("http://205.200.209.74:20003/predict", { // CHANGE DEPENDING ON URL OF SERVER
         method: "POST",
         body: formData,
       });
 
       const result = await res.json();
+      Alert.alert("Image result",`Mango classification is ${result.prediction}`)
       console.log("Prediction:", result);
     }
   };
