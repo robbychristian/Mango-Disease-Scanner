@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useRef, useState } from "react";
@@ -25,36 +26,50 @@ export default function App() {
   }
 
   const captureImage = async () => {
-    console.log("Pumasok")
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ quality: 0.7 });
+  console.log("Pumasok");
 
-      const resized = await ImageManipulator.manipulateAsync(
-        photo.uri,
-        [{ resize: { width: 224, height: 224 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+  if (cameraRef.current) {
+    const photo = await cameraRef.current.takePictureAsync({ quality: 0.7 });
+
+    const resized = await ImageManipulator.manipulateAsync(
+      photo.uri,
+      [{ resize: { width: 224, height: 224 } }], 
+      { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+    );
+
+    const formData = new FormData();
+    formData.append("file", {
+      uri: resized.uri,
+      name: "photo.jpg",
+      type: "image/jpeg",
+    });
+
+    try {
+      const res = await axios.post(
+        "http://38.224.253.75:8000/predict",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          timeout: 20000, // optional timeout
+        }
       );
-      // const response = await fetch(photo.uri);
-      // const imageData = await photo.arrayBuffer();
-      // const imageTensor = decodeImage(new Uint8Array(imageData));
-      // console.log(resized.uri)
-      const formData = new FormData();
-      formData.append("file", {
-        uri: resized.uri,
-        name: "photo.jpg",
-        type: "image/jpeg",
-      });
 
-      const res = await fetch("http://205.200.209.74:20003/predict", { // CHANGE DEPENDING ON URL OF SERVER
-        method: "POST",
-        body: formData,
-      });
+      const result = res.data;
 
-      const result = await res.json();
-      Alert.alert("Image result",`Mango classification is ${result.prediction}`)
+      Alert.alert(
+        "Image result",
+        `Mango classification is ${result.prediction}`
+      );
       console.log("Prediction:", result);
+
+    } catch (error) {
+      console.error("Upload error:", error);
+      Alert.alert("Error", "Failed to connect to server.");
     }
-  };
+  }
+};
 
   return (
     <View style={styles.container}>
