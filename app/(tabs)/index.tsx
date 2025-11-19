@@ -46,7 +46,7 @@ export default function App() {
 
     try {
       const res = await axios.post(
-        "http://38.29.145.84:8000/predict",
+        "http://38.224.253.86:8000/predict",
         formData,
         {
           headers: {
