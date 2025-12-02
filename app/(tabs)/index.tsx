@@ -25,7 +25,7 @@ export default function App() {
     );
   }
 
-  const captureImage = async () => {
+  const captureImage = async (model) => {
   console.log("Pumasok");
 
   if (cameraRef.current) {
@@ -46,7 +46,7 @@ export default function App() {
 
     try {
       const res = await axios.post(
-        "http://38.224.253.86:8000/predict",
+        "http://38.224.253.107:8000/predict",
         formData,
         {
           headers: {
@@ -59,7 +59,7 @@ export default function App() {
       const result = res.data;
 
       Alert.alert(
-        "Image result",
+        `Image result ${model}`,
         `Mango classification is ${result.prediction}`
       );
       console.log("Prediction:", result);
@@ -75,19 +75,19 @@ export default function App() {
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={captureImage}>
+        <TouchableOpacity style={styles.button} onPress={() => captureImage('ResNet50')}>
           <Text style={styles.text}>ResNet50</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={captureImage}>
+        <TouchableOpacity style={styles.button} onPress={() => captureImage('DenseNet121')}>
           <Text style={styles.text}>DenseNet121</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={captureImage}>
+        <TouchableOpacity style={styles.button} onPress={() => captureImage('InceptionV3')}>
           <Text style={styles.text}>InceptionV3</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={captureImage}>
-          <Text style={styles.text}>VGG</Text>
+        <TouchableOpacity style={styles.button} onPress={() => captureImage('VGG16')}>
+          <Text style={styles.text}>VGG16</Text>
         </TouchableOpacity>
       </View>
     </View>
