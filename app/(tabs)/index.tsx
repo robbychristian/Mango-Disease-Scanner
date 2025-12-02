@@ -76,7 +76,18 @@ export default function App() {
       <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={captureImage}>
-          <Text style={styles.text}>Capture Image</Text>
+          <Text style={styles.text}>ResNet50</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={captureImage}>
+          <Text style={styles.text}>DenseNet121</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={captureImage}>
+          <Text style={styles.text}>InceptionV3</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={captureImage}>
+          <Text style={styles.text}>VGG</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -96,19 +107,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    position: "absolute",
-    bottom: 64,
+    position: "relative",
     flexDirection: "row",
-    backgroundColor: "transparent",
+    backgroundColor: "#fff",
     width: "100%",
-    paddingHorizontal: 64,
+    gap: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
   button: {
     flex: 1,
     alignItems: "center",
+    paddingHorizontal: 2,
+    paddingVertical: 5,
+    backgroundColor: "#fe2102",
+    borderRadius: 10
   },
   text: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
     color: "white",
   },
